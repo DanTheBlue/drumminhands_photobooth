@@ -13,7 +13,7 @@ import atexit
 import sys
 import socket
 import pygame
-import pytumblr # https://github.com/tumblr/pytumblr
+#import pytumblr # https://github.com/tumblr/pytumblr
 import config
 from signal import alarm, signal, SIGALRM, SIGKILL
 
@@ -35,41 +35,41 @@ prep_delay = 3 # number of seconds at step 1 as users prep to have photo taken
 gif_delay = 100 # How much time between frames in the animated gif
 restart_delay = 5 # how long to display finished message before beginning a new session
 
-monitor_w = 800
-monitor_h = 480
-transform_x = 640 # how wide to scale the jpg when replaying
-transfrom_y = 480 # how high to scale the jpg when replaying
-offset_x = 80 # how far off to left corner to display photos
-offset_y = 0 # how far off to left corner to display photos
-replay_delay = 1 # how much to wait in-between showing pics on-screen after taking
+monitor_w = 1824
+monitor_h = 984
+transform_x = 1280 # how wide to scale the jpg when replaying
+transfrom_y = 720 # how high to scale the jpg when replaying
+offset_x = 300 # how far off to left corner to display photos
+offset_y = 80 # how far off to left corner to display photos
+replay_delay = 2 # how much to wait in-between showing pics on-screen after taking
 replay_cycles = 2 # how many times to show each photo on-screen after taking
 
 test_server = 'www.google.com'
 real_path = os.path.dirname(os.path.realpath(__file__))
 
 # Setup the tumblr OAuth Client
-client = pytumblr.TumblrRestClient(
-    config.consumer_key,
-    config.consumer_secret,
-    config.oath_token,
-    config.oath_secret,
-);
+#client = pytumblr.TumblrRestClient(
+#    config.consumer_key,
+#    config.consumer_secret,
+#    config.oath_token,
+#    config.oath_secret,
+#);
 
 ####################
 ### Other Config ###
 ####################
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(led1_pin,GPIO.OUT) # LED 1
-GPIO.setup(led2_pin,GPIO.OUT) # LED 2
-GPIO.setup(led3_pin,GPIO.OUT) # LED 3
-GPIO.setup(led4_pin,GPIO.OUT) # LED 4
-GPIO.setup(button1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection on button 1
-GPIO.setup(button2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection on button 2
-GPIO.setup(button3_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection on button 3
-GPIO.output(led1_pin,False);
-GPIO.output(led2_pin,False);
-GPIO.output(led3_pin,False);
-GPIO.output(led4_pin,False); #for some reason the pin turns on at the beginning of the program. why?????????????????????????????????
+#GPIO.setmode(GPIO.BOARD)
+#GPIO.setup(led1_pin,GPIO.OUT) # LED 1
+#GPIO.setup(led2_pin,GPIO.OUT) # LED 2
+#GPIO.setup(led3_pin,GPIO.OUT) # LED 3
+#GPIO.setup(led4_pin,GPIO.OUT) # LED 4
+#GPIO.setup(button1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection on button 1
+#GPIO.setup(button2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection on button 2
+#GPIO.setup(button3_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection on button 3
+#GPIO.output(led1_pin,False);
+#GPIO.output(led2_pin,False);
+#GPIO.output(led3_pin,False);
+#GPIO.output(led4_pin,False); #for some reason the pin turns on at the beginning of the program. why?????????????????????????????????
 
 #################
 ### Functions ###
@@ -77,21 +77,21 @@ GPIO.output(led4_pin,False); #for some reason the pin turns on at the beginning 
 
 def cleanup():
   print('Ended abruptly')
-  GPIO.cleanup()
+ # GPIO.cleanup()
 atexit.register(cleanup)
 
 def shut_it_down(channel):  
     print "Shutting down..." 
-    GPIO.output(led1_pin,True);
-    GPIO.output(led2_pin,True);
-    GPIO.output(led3_pin,True);
-    GPIO.output(led4_pin,True);
+  #  GPIO.output(led1_pin,True);
+  #  GPIO.output(led2_pin,True);
+  #  GPIO.output(led3_pin,True);
+  #  GPIO.output(led4_pin,True);
     time.sleep(3)
     os.system("sudo halt")
 
 def exit_photobooth(channel):
     print "Photo booth app ended. RPi still running" 
-    GPIO.output(led1_pin,True);
+   # GPIO.output(led1_pin,True);
     time.sleep(3)
     sys.exit()
     
@@ -102,15 +102,15 @@ def clear_pics(foo): #why is this function being passed an arguments?
 		os.remove(f) 
 	#light the lights in series to show completed
 	print "Deleted previous pics"
-	GPIO.output(led1_pin,False); #turn off the lights
-	GPIO.output(led2_pin,False);
-	GPIO.output(led3_pin,False);
-	GPIO.output(led4_pin,False)
+	#GPIO.output(led1_pin,False); #turn off the lights
+	#GPIO.output(led2_pin,False);
+	#GPIO.output(led3_pin,False);
+	#GPIO.output(led4_pin,False)
 	pins = [led1_pin, led2_pin, led3_pin, led4_pin]
 	for p in pins:
-		GPIO.output(p,True); 
+	#	GPIO.output(p,True); 
 		sleep(0.25)
-		GPIO.output(p,False);
+	#	GPIO.output(p,False);
 		sleep(0.25)
       
 def is_connected():
@@ -167,10 +167,10 @@ def start_photobooth():
 	################################# Begin Step 1 ################################# 
 	show_image(real_path + "/blank.png")
 	print "Get Ready"
-	GPIO.output(led1_pin,True);
+	#GPIO.output(led1_pin,True);
 	show_image(real_path + "/instructions.png")
 	sleep(prep_delay) 
-	GPIO.output(led1_pin,False)
+	#GPIO.output(led1_pin,False)
 
 	show_image(real_path + "/blank.png")
 	
@@ -180,7 +180,7 @@ def start_photobooth():
 	camera.resolution = (pixel_width, pixel_height) 
 	camera.vflip = True
 	camera.hflip = False
-	camera.saturation = -100 # comment out this line if you want color images
+	#camera.saturation = -100 # comment out this line if you want color images
 	camera.start_preview()
 	
 	sleep(2) #warm up camera
@@ -190,10 +190,10 @@ def start_photobooth():
 	now = time.strftime("%Y-%m-%d-%H:%M:%S") #get the current date and time for the start of the filename
 	try: #take the photos
 		for i, filename in enumerate(camera.capture_continuous(config.file_path + now + '-' + '{counter:02d}.jpg')):
-			GPIO.output(led2_pin,True) #turn on the LED
+			#GPIO.output(led2_pin,True) #turn on the LED
 			print(filename)
 			sleep(0.25) #pause the LED on for just a bit
-			GPIO.output(led2_pin,False) #turn off the LED
+			#GPIO.output(led2_pin,False) #turn off the LED
 			sleep(capture_delay) # pause in-between shots
 			if i == total_pics-1:
 				break
@@ -207,7 +207,7 @@ def start_photobooth():
 	else:
 		show_image(real_path + "/processing.png")
 
-	GPIO.output(led3_pin,True) #turn on the LED
+	#GPIO.output(led3_pin,True) #turn on the LED
 	graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + config.file_path + now + "*.jpg " + config.file_path + now + ".gif" 
 	os.system(graphicsmagick) #make the .gif
 	print "Uploading to tumblr. Please check " + config.tumblr_blog + ".tumblr.com soon."
@@ -217,7 +217,7 @@ def start_photobooth():
 		while connected: 
 			try:
 				file_to_upload = config.file_path + now + ".gif"
-				client.create_photo(config.tumblr_blog, state="published", tags=["drumminhandsPhotoBooth"], data=file_to_upload)
+				#client.create_photo(config.tumblr_blog, state="published", tags=["drumminhandsPhotoBooth"], data=file_to_upload)
 				break
 			except ValueError:
 				print "Oops. No internect connection. Upload later."
@@ -227,10 +227,10 @@ def start_photobooth():
 				except:
 					print('Something went wrong. Could not write file.')
 					sys.exit(0) # quit Python
-	GPIO.output(led3_pin,False) #turn off the LED
+	#GPIO.output(led3_pin,False) #turn off the LED
 	
 	########################### Begin Step 4 #################################
-	GPIO.output(led4_pin,True) #turn on the LED
+	#GPIO.output(led4_pin,True) #turn on the LED
 	try:
 		display_pics(now)
 	except Exception, e:
@@ -238,7 +238,7 @@ def start_photobooth():
 		traceback.print_exception(e.__class__, e, tb)
 	pygame.quit()
 	print "Done"
-	GPIO.output(led4_pin,False) #turn off the LED
+	#GPIO.output(led4_pin,False) #turn off the LED
 	
 	if post_online:
 		show_image(real_path + "/finished.png")
@@ -254,10 +254,10 @@ def start_photobooth():
 
 # when a falling edge is detected on button2_pin and button3_pin, regardless of whatever   
 # else is happening in the program, their function will be run   
-GPIO.add_event_detect(button2_pin, GPIO.FALLING, callback=shut_it_down, bouncetime=300) 
+#GPIO.add_event_detect(button2_pin, GPIO.FALLING, callback=shut_it_down, bouncetime=300) 
 
 #choose one of the two following lines to be un-commented
-GPIO.add_event_detect(button3_pin, GPIO.FALLING, callback=exit_photobooth, bouncetime=300) #use third button to exit python. Good while developing
+#GPIO.add_event_detect(button3_pin, GPIO.FALLING, callback=exit_photobooth, bouncetime=300) #use third button to exit python. Good while developing
 #GPIO.add_event_detect(button3_pin, GPIO.FALLING, callback=clear_pics, bouncetime=300) #use the third button to clear pics stored on the SD card from previous events
 
 # delete files in folder on startup
@@ -266,19 +266,19 @@ for f in files:
     os.remove(f)
 
 print "Photo booth app running..." 
-GPIO.output(led1_pin,True); #light up the lights to show the app is running
-GPIO.output(led2_pin,True);
-GPIO.output(led3_pin,True);
-GPIO.output(led4_pin,True);
+#GPIO.output(led1_pin,True); #light up the lights to show the app is running
+#GPIO.output(led2_pin,True);
+#GPIO.output(led3_pin,True);
+#GPIO.output(led4_pin,True);
 time.sleep(3)
-GPIO.output(led1_pin,False); #turn off the lights
-GPIO.output(led2_pin,False);
-GPIO.output(led3_pin,False);
-GPIO.output(led4_pin,False);
+#GPIO.output(led1_pin,False); #turn off the lights
+#GPIO.output(led2_pin,False);
+#GPIO.output(led3_pin,False);
+#GPIO.output(led4_pin,False);
 
 show_image(real_path + "/intro.png");
 
 while True:
-        GPIO.wait_for_edge(button1_pin, GPIO.FALLING)
+ #       GPIO.wait_for_edge(button1_pin, GPIO.FALLING)
 	time.sleep(0.2) #debounce
 	start_photobooth()
