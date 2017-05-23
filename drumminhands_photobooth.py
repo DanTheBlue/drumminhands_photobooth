@@ -25,7 +25,7 @@ led_pin = 7 # LED
 btn_pin = 18 # pin for the start button
 
 total_pics = 4 # number of pics to be taken
-capture_delay = 1 # delay between pics
+capture_delay = 2 # delay between pics
 prep_delay = 6 # number of seconds at step 1 as users prep to have photo taken
 gif_delay = 100 # How much time between frames in the animated gif
 restart_delay = 10 # how long to display finished message before beginning a new session
@@ -217,7 +217,7 @@ def start_photobooth():
 	camera = picamera.PiCamera()  
 	camera.vflip = False
 	camera.hflip = True # flip for preview, showing users a mirror image
-	camera.saturation = -100 # comment out this line if you want color images
+	#camera.saturation = -100 # comment out this line if you want color images
 	camera.iso = config.camera_iso
 	
 	pixel_width = 0 # local variable declaration
@@ -251,8 +251,8 @@ def start_photobooth():
                                 if i == 4:
                                   pygame.mixer.music.load('sounds/OneMoreForTheHappyCouple.mp3')
 
-				
-                                pygame.mixer.music.play()
+				pygame.mixer.music.play()
+				time.sleep(capture_delay) # pause in-between shots
 				time.sleep(2) #warm up camera
 				GPIO.output(led_pin,True) #turn on the LED
 				filename = config.file_path + now + '-0' + str(i) + '.jpg'
@@ -262,7 +262,6 @@ def start_photobooth():
 				GPIO.output(led_pin,False) #turn off the LED
 				camera.stop_preview()
 				show_image(real_path + "/pose" + str(i) + ".png")
-				time.sleep(capture_delay) # pause in-between shots
 				clear_screen()
 				if i == total_pics+1:
 					break
@@ -365,7 +364,12 @@ def start_photobooth():
 		show_image(real_path + "/finished.png")
 	else:
 		show_image(real_path + "/finished2.png")
-	
+
+	pygame.mixer.music.load('sounds/Bye.mp3')
+        pygame.mixer.music.play()
+        sleep(1)
+	pygame.mixer.music.load('sounds/TakeCare.mp3')
+        pygame.mixer.music.play()
 	time.sleep(restart_delay)
 	show_image(real_path + "/intro.png");
 	GPIO.output(led_pin,True) #turn on the LED
