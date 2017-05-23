@@ -26,7 +26,7 @@ btn_pin = 18 # pin for the start button
 
 total_pics = 4 # number of pics to be taken
 capture_delay = 1 # delay between pics
-prep_delay = 5 # number of seconds at step 1 as users prep to have photo taken
+prep_delay = 6 # number of seconds at step 1 as users prep to have photo taken
 gif_delay = 100 # How much time between frames in the animated gif
 restart_delay = 10 # how long to display finished message before beginning a new session
 test_server = 'www.google.com'
@@ -197,6 +197,16 @@ def start_photobooth():
 	################################# Begin Step 1 #################################
 	
 	print "Get Ready"
+	pygame.mixer.music.load('sounds/GreatLetsGetStarted.mp3')
+	pygame.mixer.music.play()
+
+	sleep(2)
+	
+        pygame.mixer.music.load('sounds/IllLetYouKnowWhenToPose.mp3')
+        pygame.mixer.music.play()
+
+        sleep(1)
+        
 	GPIO.output(led_pin,False);
 	show_image(real_path + "/instructions.png")
 	sleep(prep_delay)
@@ -229,8 +239,20 @@ def start_photobooth():
 	if config.capture_count_pics:
 		try: # take the photos
 			for i in range(1,total_pics+1):
-				camera.hflip = True # preview a mirror image
+				camera.hflip = False # preview a mirror image
 				camera.start_preview(resolution=(config.monitor_w, config.monitor_h)) # start preview at low res but the right ratio
+
+				if i == 1:
+                                  pygame.mixer.music.load('sounds/Pose!.mp3')
+                                if i == 2:
+                                  pygame.mixer.music.load('sounds/ChangePose.mp3')
+                                if i == 3:
+                                  pygame.mixer.music.load('sounds/AnotherPose.mp3')
+                                if i == 4:
+                                  pygame.mixer.music.load('sounds/OneMoreForTheHappyCouple.mp3')
+
+				
+                                pygame.mixer.music.play()
 				time.sleep(2) #warm up camera
 				GPIO.output(led_pin,True) #turn on the LED
 				filename = config.file_path + now + '-0' + str(i) + '.jpg'
@@ -245,6 +267,8 @@ def start_photobooth():
 				if i == total_pics+1:
 					break
 		finally:
+                  	pygame.mixer.music.load('sounds/LookingGood.mp3')
+                        pygame.mixer.music.play()
 			camera.close()
 	else:
 		camera.start_preview(resolution=(config.monitor_w, config.monitor_h)) # start preview at low res but the right ratio
@@ -362,6 +386,8 @@ for x in range(0, 5): #blink light to show the app is running
 	sleep(0.25)
 
 show_image(real_path + "/intro.png");
+pygame.mixer.music.load('sounds/AnyoneWantToTakeAPhoto.mp3')
+pygame.mixer.music.play(0)
 
 while True:
 	GPIO.output(led_pin,True); #turn on the light showing users they can push the button
